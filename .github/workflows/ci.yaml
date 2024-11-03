@@ -23,6 +23,9 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Check if coverage report exists
+        run: test -f coverage/lcov.info && echo "Coverage report exists" || echo "Coverage report not found"
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
