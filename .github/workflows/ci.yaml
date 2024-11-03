@@ -11,9 +11,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          # Disabling shallow clone is recommended for improving relevancy of reporting
-          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -29,8 +26,15 @@ jobs:
       - name: Check if coverage report exists
         run: test -f coverage/lcov.info && echo "Coverage report exists" || echo "Coverage report not found"
 
+  sonarcloud:
+    runs-on: ubuntu-latest
+    needs: run-ci  # Garantia de que o job `run-ci` seja concluído primeiro
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
